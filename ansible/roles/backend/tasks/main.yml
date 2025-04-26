@@ -1,0 +1,33 @@
+- name: Update and install Node.js, Git and PM2
+  apt:
+    name:
+      - nodejs
+      - npm
+      - git
+    state: present
+- name: Install PM2 globally
+  npm:
+    name: pm2
+    global: yes
+- name: Clone the backend repository
+  git:
+    repo: https://github.com/sonam-niit/Project-TodoApp-Mern.git
+    dest: /home/ubuntu/todoapp-backend
+    version: main
+- name: Install backend dependencies
+  npm: 
+    path: /home/ubuntu/todoapp-backend
+    state: present
+
+- name: Create .env file for backend
+  copy:
+    dest: /home/ubuntu/todoapp-backend/.env
+    content: |
+      MONGO_URI=mongodb://localhost:27017/todoapp
+- name: Start the backend server with PM2
+  command: pm2 start npm --name "todoapp-backend" -- start
+  args:
+    chdir: /home/ubuntu/todoapp-backend
+
+- name: Save PM2 process list
+  command: pm2 save

@@ -1,0 +1,6 @@
+- name: Configure Backend App
+  hosts: backend
+  become: yes
+  roles:
+    - role: backend
+      
