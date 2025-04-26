@@ -1,2 +1,23 @@
 node_modules
 .env
+
+# Git Ignore for Terraform
+
+**/.Terraform
+
+*.tfstate
+*.tfstate.*
+
+crash.log
+
+*.tfplan
+
+*.tfvars
+
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+.terraformrc
+terraform.rc
