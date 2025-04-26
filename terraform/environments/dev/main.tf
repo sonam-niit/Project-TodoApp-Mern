@@ -24,3 +24,13 @@ module "alb" {
   instnce_ids = module.ec2.instance_ids
   
 }
+
+module "frontend_s3" {
+  source = "../../modules/s3"
+  bucket_name    = "sonam-frontend-bucket-name"
+}
+module "frontend_cloudfront" {
+  source = "../../modules/cloudfront"
+  s3_bucket_domain_name = module.frontend_s3.bucket_domain_name
+}
+

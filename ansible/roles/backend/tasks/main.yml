@@ -56,6 +56,6 @@
     chdir: /home/ubuntu/backend
     executable: /bin/bash
 
-
-- name: Save pm2 process list
+- name: Save PM2 process list
   command: pm2 save
+

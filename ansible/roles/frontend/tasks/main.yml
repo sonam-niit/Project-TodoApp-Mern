@@ -1,0 +1,24 @@
+- name: Deploy Frontend to S3
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    frontend_dir: "../../../frontend"
+    s3_bucket_name: "sonam-frontend-bucket-name"
+
+  tasks:
+    - name: Install frontend dependencies
+      shell: npm install
+      args:
+        chdir: "{{ frontend_dir }}"
+
+    - name: Build frontend project
+      shell: npm run build
+      args:
+        chdir: "{{ frontend_dir }}"
+
+    - name: Sync build folder to S3 bucket
+      shell: aws s3 sync dist s3://{{ s3_bucket_name }}/ --delete
+      args:
+        chdir: "{{ frontend_dir }}"
