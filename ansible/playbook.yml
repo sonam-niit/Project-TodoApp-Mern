@@ -2,6 +2,6 @@
   hosts: backend
   become: yes
   vars:
-    mongodb_url: "mongodb://localhost:27017/todos" 
+    mongodb_url: "mongodb+srv://sonamgravity:R1g6o43WdNDanvRM@cluster0.dnx7cse.mongodb.net/todos" 
   roles:
     - backend

@@ -13,6 +13,9 @@ mongoose.connect(process.env.MONGO_URI)
     .catch(err => console.log(err));
 
 app.use('/api/todos', todoRoutes);
+app.get('/', (req, res) => {
+    res.status(200).send('API is running...');
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT,'0.0.0.0' ,() => console.log(`Server started on port ${PORT}`));
