@@ -1,33 +1,61 @@
-- name: Update and install Node.js, Git and PM2
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install necessary packages
   apt:
     name:
-      - nodejs
-      - npm
       - git
+      - curl
     state: present
-- name: Install PM2 globally
+
+- name: Install Node.js
+  shell: |
+    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    apt-get install -y nodejs
+  args:
+    executable: /bin/bash
+
+- name: Install pm2 globally
   npm:
     name: pm2
     global: yes
-- name: Clone the backend repository
+
+- name: Clone the repository
   git:
-    repo: https://github.com/sonam-niit/Project-TodoApp-Mern.git
-    dest: /home/ubuntu/todoapp-backend
+    repo: "https://github.com/sonam-niit/Project-TodoApp-Mern.git"
+    dest: /home/ubuntu/app
     version: main
+
+- name: Copy backend folder to app directory
+  copy:
+    src: /home/ubuntu/app/backend/
+    dest: /home/ubuntu/backend/
+    remote_src: yes
+
 - name: Install backend dependencies
-  npm: 
-    path: /home/ubuntu/todoapp-backend
+  npm:
+    path: /home/ubuntu/backend
     state: present
 
-- name: Create .env file for backend
+- name: Create .env file
   copy:
-    dest: /home/ubuntu/todoapp-backend/.env
+    dest: /home/ubuntu/backend/.env
     content: |
-      MONGO_URI=mongodb://localhost:27017/todoapp
-- name: Start the backend server with PM2
-  command: pm2 start npm --name "todoapp-backend" -- start
-  args:
-    chdir: /home/ubuntu/todoapp-backend
+      PORT=5000
+      MONGO_URI={{ mongodb_url }}
 
-- name: Save PM2 process list
+- name: Restart or Start backend application with PM2
+  shell: |
+    if pm2 list | grep -q "backend"; then
+      pm2 restart backend
+    else
+      pm2 start server.js --name backend
+    fi
+  args:
+    chdir: /home/ubuntu/backend
+    executable: /bin/bash
+
+
+- name: Save pm2 process list
   command: pm2 save

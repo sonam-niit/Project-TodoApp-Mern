@@ -9,11 +9,11 @@ module "networking" {
 module "ec2" {
   source = "../../modules/ec2"
   instance_type = "t2.micro"
-  ami_id = "ami-084568db4383264d4" # Ubuntu 20.04 LTS (HVM), SSD Volume Type
+  ami_id = "ami-084568db4383264d4"
   subnet_ids = module.networking.subnet_ids
   security_group_id = module.networking.security_group_id
   instance_count = 2
-  key_name = "mern-key" # Replace with your key pair name
+  key_name = "todo-app"
 }
 
 module "alb" {
